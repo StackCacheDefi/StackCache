@@ -1,0 +1,79 @@
+import CLOCK from "../../imgs/clock.png";
+import styled from "styled-components";
+import { Table, TableContainer } from "../NTTMain/4_EarlyAdopter";
+import { Link } from "react-router-dom";
+
+const BuyNowButton = styled.button`
+  background: linear-gradient(91.72deg, #1EBA1A -8.25%, #A5A6A5 92.02%),
+  linear-gradient(180deg, rgba(53, 144, 255, 0) 0%, rgba(165, 166, 165, 0) 100.12%);
+  border-radius: 12px;
+  width: 100%;
+  height: 80px;
+  font-family: "WorkSans";
+  font-weight: 800;
+  font-size: 24px;
+  color: white;
+  line-height: 80px;
+`;
+
+export default function Deposit() {
+  return (
+    <div className="w-full border-t border-[#222] flex flex-col items-center pb-[50px] tablet:pb-[100px]">
+      <div className="pt-[50px] tablet:pt-[100px] relative w-full desktop:w-[1280px] flex flex-col items-center">
+        <div className="relative flex flex-col items-center gap-[15px] tablet:gap-[30px]">
+          <div className="font-grotesk text-[26px] leading-[26px] tablet:text-[38px] tablet:leading-[48px]">
+            <span className="text-[#ffffff] font-[300]">
+              Be a Committee NTT
+            </span>
+            <br />
+            <span className="text-[#1EBA1A] font-[300] leading-[12px]">
+              Early Adopter
+            </span>
+          </div>
+          <div
+            className="text-[18px] leading-[20px] tablet:text-[22px] tablet:leading-[28px] text-white max-w-[1080px] font-[200] px-3">
+            For a limited time, be an early adopter and own a Committee NTT in perpetuity, top-level voting privileges,
+            and $250 credit in both Cache Box & CBC for a head start at earning in Stack Cache
+          </div>
+        </div>
+      </div>
+      <img src={CLOCK} className="w-[144px] mt-[28px]" />
+      <div className="mt-[52px] tablet:w-[600px] w-full px-[20px]">
+        <Link to="/early_adopters">
+          <BuyNowButton>BUY NOW and be an EARLY ADOTPER</BuyNowButton>
+        </Link>
+      </div>
+      <div className="text-[#F4DF27] text-[20px] tablet:text-[28px] font-sans font-[300] mt-[50px]">
+        Committee NTT Early Adopter Details
+      </div>
+      <div className="text-white tablet:w-[1000px] w-full mt-[40px] mb-[80px]">
+        <TableContainer>
+          <Table>
+            <tr>
+              <th width="25%">Cost</th>
+              <th width="30%">Perks</th>
+              <th width="*">Rewards</th>
+            </tr>
+            <tr>
+              <td>$1,000 USDC</td>
+              <td className="text-left">
+                <ul className="ml-[10px] list-disc">
+                  <li>Permanent in wallet</li>
+                  <li>Nominate items for DAO vote</li>
+                  <li>Exclusive TG/Discord Channel Access</li>
+                </ul>
+              </td>
+              <td className="text-left">
+                $500 in principal & Board NTT
+                <ul className="ml-[30px] list-disc">
+                  <li>$250 Cache Box Plus </li>
+                  <li>$250 CBC (wBTC Pool)</li>
+                </ul>
+              </td>
+            </tr>
+          </Table>
+        </TableContainer>
+      </div>
+    </div>
+  );
+}

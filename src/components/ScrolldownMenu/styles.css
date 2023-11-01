@@ -1,0 +1,41 @@
+.link-header {
+  position: relative;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0rem;
+  color: #000;
+  text-decoration: none;
+  line-height: 55px;
+}
+
+.menu > a {
+  line-height: 55px;
+}
+
+.link-header:hover .sub-links {
+  display: flex;
+  line-height: 30px;
+}
+
+.sub-links {
+  background-color: #fefefe;
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  min-width: 180px;
+}
+
+.sub-links a {
+  padding: 5px 20px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.sub-links a.list-item {
+  padding-left: 0;
+}
+
+.sub-links a:hover {
+  background-color: #555;
+}

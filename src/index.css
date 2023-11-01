@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "WorkSans";
+  src: local("WorkSans"),
+    url(./fonts/WorkSans-VariableFont_wght.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Digital-7-Mono";
+  src: local("Digital-7-Mono"),
+    url(./fonts/digital-7-Mono.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "SpaceGrotesk";
+  src: local("SpaceGrotesk"),
+    url(./fonts/SpaceGrotesk-VariableFont_wght.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Inter";
+  src: local("Inter"), url(./fonts/Inter-VariableFont.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Mohave";
+  src: local("Mohave"), url(./fonts/Mohave-VariableFont.ttf) format("truetype");
+}
+
+body {
+  background-color: #000;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "WorkSans", "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+a {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0rem;
+  color: #000;
+  text-decoration: none;
+}
