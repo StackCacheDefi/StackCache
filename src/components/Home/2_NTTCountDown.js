@@ -140,7 +140,7 @@ export default function NTTCountDown() {
     <Container>
       {(now > startTime && now < endTime) ? (
         <>
-          <div className="font-mono text-white font-[400] text-[60px] tablet:text-[80px] leading-[60px] tablet:leading-[80px] px-[10px] mt-[30px]">
+          <div className="font-mono text-white font-[400] text-[60px] tablet:text-[80px] leading-[60px] tablet:leading-[80px] px-[10px] mt-[-30px]">
             {formatDuration()}
           </div>
           <div className="font-grotest font-[400] text-[36px] leading-[36px] text-[#ffeb3c]">

@@ -5,7 +5,7 @@ export default function Intro() {
   return (
     <div className="w-full flex justify-center pb-[50px]">
       <div className="w-full desktop:w-[1280px] flex flex-col items-center px-[12px]">
-        <div className="w-full flex flex-col items-center relative pt-[50px]">
+        <div className="w-full flex flex-col items-center relative pt-[50px] pb-[50px] border-b border-[#A5A6A5]">
           <div
             className="font-grotesk text-[30px] leading-[32px] tablet:text-[42px] tablet:leading-[48px] text-[#EE0033]">
             Stack Token<br />
@@ -22,7 +22,7 @@ export default function Intro() {
             className="absolute h-full top-[-20px] left-[0] desktop:left-[150px] opacity-10"
           />
         </div>
-        <div className="font-grotesk text-white text-[26px] tablet:text-[36px] font-[300] mt-[70px]">
+        <div className="font-grotesk text-white text-[26px] tablet:text-[36px] font-[300] mt-[50px]">
           About the Stack Token “Fair Launch”
         </div>
         <div className="max-w-[800px] text-[16px] font-[300] leading-[22px] mt-[20px] text-black mt-[30px] text-left">

@@ -4,7 +4,7 @@ import BG from "../../imgs/img_distribution.png";
 const Distribution = () => {
   return (
     <div className="w-full flex justify-center py-[50px]">
-      <div className="w-full tablet:w-[1000px] flex flex-col items-center relative px-[12px]">
+      <div className="w-full tablet:w-[1000px] flex flex-col items-center relative px-[12px] overflow-hidden">
         <img
           src={LOGO}
           alt="logo background"

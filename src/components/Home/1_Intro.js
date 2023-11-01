@@ -87,7 +87,9 @@ export default function Intro() {
               provide ALL passive crypto income.
             </DescriptionText>
             <ButtonGroup>
-              <RedButton>Launch Dapp</RedButton>
+              <Link to="/stack_fair_launch">
+                <RedButton>BUY STACK NOW</RedButton>
+              </Link>
               <Link to="/about">
                 <GrayButton>Learn More</GrayButton>
               </Link>
