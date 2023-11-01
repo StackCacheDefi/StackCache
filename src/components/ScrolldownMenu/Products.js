@@ -9,7 +9,12 @@ function ProductsMenu({ children }) {
           {children}
         </div>
         <div className="sub-links">
-          <Link className="text-[#F4A227]" to="/early_adopters">*EARLY ADOPTER PRE-SALE</Link>
+          <Link className="text-[#BA1C30]" to="/stack_fair_launch">
+            *STACK LIQUIDITY DRIVE (FAIR LAUNCH)
+          </Link>
+          <Link className="text-[#F4A227]" to="/early_adopters">
+            *EARLY ADOPTER PRE-SALE
+          </Link>
           <Link to="/products/stack">STACK TOKEN</Link>
           <Link to="/products/cache">CACHE TOKEN</Link>
           <Link to="/products/ntt">NTT'S</Link>

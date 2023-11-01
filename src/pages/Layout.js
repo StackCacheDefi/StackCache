@@ -60,7 +60,7 @@ const EarlyYellowButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 25px;
   cursor: pointer;
   outline: none;
@@ -71,6 +71,28 @@ const EarlyYellowButton = styled.div`
   &:hover {
     background: linear-gradient(180deg, rgba(244, 200, 50, 0.7) 0%, #F4B627 100.12%),
     linear-gradient(91.72deg, #FF0000 -8.25%, rgba(47, 1, 1, 0.93) 92.02%);
+  }
+`
+
+const LaunchRedButton = styled.div`
+  background: linear-gradient(180deg, #F5515F 0%, #9F041B 100%);
+  border-radius: 12px;
+  height: 40px;
+  min-width: 200px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  line-height: 25px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  transition: all 0.5s;
+  color: #fff;
+
+  &:hover {
+    background: linear-gradient(180deg, rgba(245, 81, 95, 0.8) 0%, rgba(159, 4, 27, 0.8) 100%);
   }
 `
 
@@ -112,6 +134,13 @@ const Layout = () => {
               className="text-[16px] font-[600]"
             >
               About
+            </Link>
+            <Link
+              onClick={() => setIsOpenMenu(false)}
+              to="/stack_fair_launch"
+              className="text-[16px] font-[600] text-[#BA1C30]"
+            >
+              *STACK LIQUIDITY DRIVE (FAIR LAUNCH)
             </Link>
             <Link
               onClick={() => setIsOpenMenu(false)}
@@ -198,7 +227,10 @@ const Layout = () => {
               </li>
             </ul>
           </div>
-          <div className="hidden pr-[50px] laptop:flex">
+          <div className="hidden pr-[50px] laptop:flex gap-[20px]">
+            <Link to="/stack_fair_launch">
+              <LaunchRedButton>STACK LAUNCH - BUY NOW</LaunchRedButton>
+            </Link>
             <Link to="/early_adopters">
               <EarlyYellowButton>Early Adopter Pre-Sale</EarlyYellowButton>
             </Link>

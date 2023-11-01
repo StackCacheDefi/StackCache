@@ -35,8 +35,7 @@ const Days = () => {
   useEffect(() => {
     if (endTime > now) {
       timerId.current = setInterval(() => {
-        console.log(now, startTime, endTime);
-        setNow(moment().tz("America/New_York").unix());
+        setNow(moment().tz("EST").unix());
       }, 1000);
 
       return () => {
