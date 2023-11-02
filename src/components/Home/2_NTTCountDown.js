@@ -100,7 +100,7 @@ export const Button = styled.button`
 `;
 
 export default function NTTCountDown() {
-  const endTime = moment("2023-11-08 17:00:00 EST").unix();
+  const endTime = moment("2023-11-09 15:00:00 EST").unix();
   const [now, setNow] = useState(moment().tz("EST").unix());
 
   const timerId = useRef();
