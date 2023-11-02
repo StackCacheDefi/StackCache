@@ -71,29 +71,23 @@ const ConnectWallet = () => {
             <div className="uppercase text-[#737373] text-[16px]">
               Stack
             </div>
-            <div className="w-full grid justify-between grid-cols-2 mt-[50px] gap-[50px]">
-              <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center mt-[30px]">
+              <div className="flex gap-[10px]">
                 <img src={BNB} className="w-[100px] h-[100px]" />
-                <div className="text-[16px] text-[#737373] mt-[10px]">
-                  Donated BNB
-                </div>
-                <div className="font-[300] text-[36px] text-black">
-                  0
-                </div>
-              </div>
-              <div className="flex flex-col items-center">
                 <img src={USDC} className="w-[100px] h-[100px]" />
-                <div className="text-[16px] text-[#737373] mt-[10px]">
-                  Donated USDC
-                </div>
-                <div className="font-[300] text-[36px] text-black">
-                  0
-                </div>
               </div>
+              <div className="text-[16px] text-[#737373] mt-[10px]">
+                Total $ of Donated BNB & USDC
+              </div>
+              <div className="font-[300] text-[36px] text-black">
+                $0.00
+              </div>
+            </div>
+            <div className="w-full flex justify-between mt-[30px] gap-[20px] px-[30px]">
               <div className="flex flex-col items-center">
                 <img src={STAKE} className="w-[100px] h-[100px]" />
                 <div className="text-[16px] text-[#737373] mt-[10px]">
-                  Stake
+                  Estimated Stake
                 </div>
                 <div className="font-[300] text-[36px] text-black">
                   0
@@ -121,7 +115,7 @@ const ConnectWallet = () => {
           <div className="font-[300] text-[36px] text-[#737373]">
             Overall Stats
           </div>
-          <div className="w-full grid grid-cols-2 tablet:grid-cols-4 gap-[30px] mt-[30px] mb-[50px]">
+          <div className="w-full grid grid-cols-3 gap-[30px] mt-[30px] mb-[50px] px-[10px]">
             <div className="flex flex-col items-center">
               <div className="text-[16px] text-[#737373]">
                 # of Participants
@@ -132,18 +126,10 @@ const ConnectWallet = () => {
             </div>
             <div className="flex flex-col items-center">
               <div className="text-[16px] text-[#737373]">
-                BNB Liquidity
+                Total Liquidity
               </div>
               <div className="font-[300] text-[36px] text-black">
-                0
-              </div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="text-[16px] text-[#737373]">
-                USDC Liquidity
-              </div>
-              <div className="font-[300] text-[36px] text-black">
-                0
+                $0.00
               </div>
             </div>
             <div className="flex flex-col items-center">
