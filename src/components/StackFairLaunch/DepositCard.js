@@ -1,17 +1,17 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { ethers } from "ethers";
-import { useAccount, useNetwork } from "wagmi";
 import { useWeb3Modal } from "@web3modal/react";
 import { toast } from "react-toastify";
+
 import { useWeb3 } from "../../contexts/Web3Context";
 
 const Button = styled.button`
   height: 32px;
   width: 180px;
   border-radius: 12px;
-  background: linear-gradient(180deg, #F5515F 0%, #A5A6A5 100.12%),
-  linear-gradient(91.72deg, #FF0000 -8.25%, rgba(47, 1, 1, 0.93) 92.02%);
+  background: linear-gradient(180deg, #f5515f 0%, #a5a6a5 100.12%),
+    linear-gradient(91.72deg, #ff0000 -8.25%, rgba(47, 1, 1, 0.93) 92.02%);
   color: white;
 
   &:disabled {
@@ -20,48 +20,44 @@ const Button = styled.button`
 `;
 
 export default function DepositCard(props) {
-  const {open} = useWeb3Modal();
-  const {isConnected} = useAccount();
-  const {chain} = useNetwork();
-  const {USDCContract, EarlyAdapterContract, USDCBalance, getUSDCBalance, BNBContract, BNBBalance, getBNBBalance} =
-    useWeb3();
+  const { open } = useWeb3Modal();
+  const {
+    chain,
+    isConnected,
+    USDCContract,
+    LiquidityDriveContract,
+    USDCBalance,
+    getUSDCBalance,
+    BNBBalance,
+    getBNBBalance,
+  } = useWeb3();
   const [processDeposit, setProcessDeposit] = useState("");
   const [depositAmount, setDepositAmount] = useState(null);
   const balance = props.token === "BNB" ? BNBBalance : USDCBalance;
 
-  async function handleApprove(weiAmount, reward) {
-    setProcessDeposit("Approving...");
-
+  async function handleDonate(weiAmount) {
     if (props.token === "BNB") {
-      const tx = await BNBContract.approve(
-        process.env.REACT_APP_DEPOSIT_CONTRACT,
-        weiAmount
-      );
-      tx.wait()
-        .then(async () => {
-          setProcessDeposit("Depositing...");
-          const tx = await EarlyAdapterContract.deposit(weiAmount, reward);
-          tx.wait().then(async () => {
-            toast.success("Deposited successfully!");
-            await getBNBBalance();
-            setProcessDeposit("");
-          });
-        })
-        .catch((err) => {
-          setProcessDeposit("");
-          console.log(err);
-        });
+      setProcessDeposit("Donating...");
+
+      const tx = await LiquidityDriveContract.donate(0, {value: weiAmount});
+      tx.wait().then(async () => {
+        toast.success("Donated successfully!");
+        await getBNBBalance();
+        setProcessDeposit("");
+      });
     } else {
+      setProcessDeposit("Approving...");
+
       const tx = await USDCContract.approve(
-        process.env.REACT_APP_DEPOSIT_CONTRACT,
+        process.env.REACT_APP_LIQUIDITY_DRIVE_CONTRACT,
         weiAmount
       );
       tx.wait()
         .then(async () => {
-          setProcessDeposit("Depositing...");
-          const tx = await EarlyAdapterContract.deposit(weiAmount, reward);
+          setProcessDeposit("Donating...");
+          const tx = await LiquidityDriveContract.donate(weiAmount);
           tx.wait().then(async () => {
-            toast.success("Deposited successfully!");
+            toast.success("Donated successfully!");
             await getUSDCBalance();
             setProcessDeposit("");
           });
@@ -73,10 +69,10 @@ export default function DepositCard(props) {
     }
   }
 
-  const handleDeposit = async (reward) => {
+  const handleDeposit = () => {
     if (depositAmount !== "" && depositAmount !== 0) {
       const weiAmount = ethers.utils.parseEther(depositAmount.toString());
-      handleApprove(weiAmount, reward)
+      handleDonate(weiAmount)
         .then()
         .catch((err) => {
           console.log(err);
@@ -89,9 +85,7 @@ export default function DepositCard(props) {
 
   return (
     <div className="w-full tablet:w-[400px] flex flex-col items-center gap-[10px] py-[16px]">
-      <div className="font-[300] text-white text-[24px]">
-        {props.title}
-      </div>
+      <div className="font-[300] text-white text-[24px]">{props.title}</div>
       <img src={props.img} className="w-[52px] h-[52px]" />
       <div className="w-[90%]">
         <div
@@ -126,12 +120,7 @@ export default function DepositCard(props) {
           {props.token}
         </div>
         <Button
-          onClick={
-            isConnected
-              ? () =>
-                handleDeposit(props.token)
-              : open
-          }
+          onClick={isConnected ? () => handleDeposit() : open}
           disabled={
             processDeposit !== "" ||
             depositAmount == null ||
@@ -144,8 +133,10 @@ export default function DepositCard(props) {
               ? chain.id !== +process.env.REACT_APP_CHAIN_ID
                 ? "Wrong Network"
                 : processDeposit === ""
-                  ? "Approve/Deposit"
-                  : processDeposit
+                ? props.token === "BNB"
+                  ? "Donate"
+                  : "Approve/Deposit"
+                : processDeposit
               : "Connect Wallet"}
           </div>
         </Button>

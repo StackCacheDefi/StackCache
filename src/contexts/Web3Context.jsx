@@ -1,25 +1,29 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { useAccount, useSigner } from "wagmi";
+import { useAccount, useSigner, useBalance, useNetwork } from "wagmi";
 import { ethers, Contract } from "ethers";
 
 import EarlyAdapterABI from "../assets/abis/EarlyAdapter.json";
-import BNBABI from "../assets/abis/BNB.json";
+import StackLiquidityDriveABI from "../assets/abis/StackLiquidityDrive.json";
 import USDCABI from "../assets/abis/USDC.json";
 
 export const Web3Context = createContext({
+  chain: null,
+  isConnected: false,
   EarlyAdapterContract: null,
+  LiquidityDriveContract: null,
   USDCContract: null,
   USDCBalance: 0,
   getUSDCBalance: async () => {},
-  BNBContract: null,
   BNBBalance: 0,
   getBNBBalance: async () => {},
 });
 
 export const Web3Provider = ({ children }) => {
+  const { chain } = useNetwork();
   const { data: signer } = useSigner();
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
+  const { data: balanceData } = useBalance({ address });
   const [USDCBalance, setUSDCBalance] = useState();
   const [BNBBalance, setBNBBalance] = useState();
 
@@ -32,14 +36,18 @@ export const Web3Provider = ({ children }) => {
     );
   }, [signer]);
 
+  const LiquidityDriveContract = useMemo(() => {
+    if (!signer) return;
+    return new Contract(
+      process.env.REACT_APP_LIQUIDITY_DRIVE_CONTRACT,
+      StackLiquidityDriveABI,
+      signer
+    );
+  }, [signer]);
+
   const USDCContract = useMemo(() => {
     if (!signer) return;
     return new Contract(process.env.REACT_APP_USDC, USDCABI, signer);
-  }, [signer]);
-
-  const BNBContract = useMemo(() => {
-    if (!signer) return;
-    return new Contract(process.env.REACT_APP_BNB, BNBABI, signer);
   }, [signer]);
 
   const getUSDCBalance = async () => {
@@ -49,8 +57,7 @@ export const Web3Provider = ({ children }) => {
   };
 
   const getBNBBalance = async () => {
-    let balance = await BNBContract.balanceOf(address);
-    balance = Number(ethers.utils.formatEther(balance));
+    const balance = Number(ethers.utils.formatEther(balanceData.value));
     setBNBBalance(balance.toFixed(2));
   };
 
@@ -58,19 +65,22 @@ export const Web3Provider = ({ children }) => {
     if (USDCContract) {
       getUSDCBalance();
     }
-    if (BNBContract) {
+
+    if (balanceData) {
       getBNBBalance();
     }
-  }, [address, USDCContract, BNBContract]);
+  }, [balanceData, address, USDCContract]);
 
   return (
     <Web3Context.Provider
       value={{
+        chain,
+        isConnected,
         EarlyAdapterContract,
+        LiquidityDriveContract,
         USDCContract,
         USDCBalance,
         getUSDCBalance,
-        BNBContract,
         BNBBalance,
         getBNBBalance,
       }}
