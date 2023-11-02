@@ -15,7 +15,6 @@ const Bg = styled.div`
 
 const Days = () => {
   const endTime = moment("2023-11-08 17:00:00 EST").unix();
-  const startTime = moment("2023-11-01 17:00:00 EST").unix();
   const [now, setNow] = useState(moment().tz("EST").unix());
   const timerId = useRef();
 
@@ -51,7 +50,7 @@ const Days = () => {
 
   return (
     <>
-      {endTime > now && now > startTime &&
+      {endTime > now &&
         <Bg>
           <div className="font-mono text-white font-[400] text-[60px] tablet:text-[80px] leading-[60px] tablet:leading-[90px] px-[10px]">
             {formatDuration()}
