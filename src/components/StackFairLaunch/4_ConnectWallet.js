@@ -1,23 +1,79 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { ethers } from "ethers";
+
 import DepositCard from "./DepositCard";
 import BNB from "../../imgs/img_bnb.png";
 import USDC from "../../imgs/img_usdc.png";
 import S_LOGO from "../../imgs/img_s_logo.svg";
 import LOGO from "../../imgs/about-bg-logo.svg";
 import STAKE from "../../imgs/img_stake.png";
-import { Link } from "react-router-dom";
+import { useWeb3 } from "../../contexts/Web3Context";
+import { useEffect, useState } from "react";
 
 const ConnectWalletButton = styled.button`
-  background: linear-gradient(180deg, #404040 0%, #A5A6A5 100.12%);
+  background: linear-gradient(180deg, #404040 0%, #a5a6a5 100.12%);
   border-radius: 12px;
 `;
 
 const GradientBox = styled.button`
-  background: linear-gradient(180deg, #000000 0%, #A5A6A5 100.12%);
+  background: linear-gradient(180deg, #000000 0%, #a5a6a5 100.12%);
   border-radius: 12px;
 `;
 
+const TOTAL_TOKENS_FOR_FAIR_LAUNCH = 12500000;
+
+const defaultFairLaunchInfo = {
+  estimatedTokens: 0,
+  estimatedPercentage: 0,
+  claimedTokens: 0,
+  bnbDonated: 0,
+  participants: 0,
+  totalBNBDonated: 0,
+  transactions: 0,
+};
+
 const ConnectWallet = () => {
+  const { address, LiquidityDriveContract } = useWeb3();
+  const [fairLaunchInfo, setFairLaunchInfo] = useState(defaultFairLaunchInfo);
+
+  const setInfo = async () => {
+    const bnbDonated = await LiquidityDriveContract._bnbDonated(
+      ethers.utils.getAddress(address)
+    );
+    const participants = await LiquidityDriveContract.participants();
+    const totalBNBDonated = await LiquidityDriveContract.totalBNBDonated();
+    const transactions = await LiquidityDriveContract.totalTxs();
+    const claimedTokens = await LiquidityDriveContract._claimed(address);
+
+    const estimatedPercentage = Number(
+      (ethers.utils.formatEther(bnbDonated) /
+        ethers.utils.formatEther(totalBNBDonated)) *
+        100
+    ).toFixed(2);
+
+    const estimatedTokens =
+      (TOTAL_TOKENS_FOR_FAIR_LAUNCH * estimatedPercentage) / 100;
+
+    setFairLaunchInfo({
+      ...fairLaunchInfo,
+      estimatedTokens,
+      estimatedPercentage,
+      claimedTokens:
+        claimedTokens > 0 ? ethers.utils.formatEther(claimedTokens) : 0,
+      bnbDonated: ethers.utils.formatEther(bnbDonated),
+      participants: ethers.utils.formatUnits(participants, "wei"),
+      totalBNBDonated: ethers.utils.formatEther(totalBNBDonated),
+      transactions: ethers.utils.formatUnits(transactions, "wei"),
+    });
+  };
+
+  useEffect(() => {
+    if (address && LiquidityDriveContract) {
+      setInfo();
+    }
+  }, [address, LiquidityDriveContract]);
+
   return (
     <div className="w-full flex justify-center border-b border-[#A5A6A5] py-[50px]">
       <div className="w-full tablet:w-[1200px] relative flex flex-col items-center">
@@ -27,29 +83,17 @@ const ConnectWallet = () => {
           className="absolute left-0 top-[80px] tablet:max-h-[650px] opacity-50"
         />
         <ConnectWalletButton>
-          <button
-            className="w-[240px] h-[48px] text-white flex items-center justify-center font-[700] text-[16px]">Connect
-            Wallet
+          <button className="w-[240px] h-[48px] text-white flex items-center justify-center font-[700] text-[16px]">
+            Connect Wallet
           </button>
         </ConnectWalletButton>
-        <div
-          className="flex flex-col tablet:flex-row w-full tablet:w-[1000px] tablet:gap-[200px] mt-[50px] tablet:mt-[80px] z-[1] px-[12px] tablet:px-0">
+        <div className="flex flex-col tablet:flex-row w-full tablet:w-[1000px] tablet:gap-[200px] mt-[50px] tablet:mt-[80px] z-[1] px-[12px] tablet:px-0">
           <div className="flex-1 flex flex-col gap-[50px] tablet:gap-[100px]">
             <GradientBox>
-              <DepositCard
-                title="BNB"
-                img={BNB}
-                minValue={0.005}
-                token="BNB"
-              />
+              <DepositCard title="BNB" img={BNB} minValue={0.005} token="BNB" />
             </GradientBox>
             <GradientBox>
-              <DepositCard
-                title="USDC"
-                img={USDC}
-                minValue={1}
-                token="USDC"
-              />
+              <DepositCard title="USDC" img={USDC} minValue={1} token="USDC" />
             </GradientBox>
             <GradientBox>
               <div className="font-[300] text-[30px] leading-[120px] text-white">
@@ -61,16 +105,17 @@ const ConnectWallet = () => {
             <div className="font-[300] text-[36px] text-[#737373]">
               My Stats
             </div>
-            <img src={S_LOGO} className="opacity-30 mt-[30px] w-[100px] h-[100px]" />
+            <img
+              src={S_LOGO}
+              className="opacity-30 mt-[30px] w-[100px] h-[100px]"
+            />
             <div className="text-[16px] text-[#737373] mt-[10px]">
               Estimated Tokens
             </div>
             <div className="font-[300] text-[36px] text-black">
-              0
+              {fairLaunchInfo.estimatedTokens}
             </div>
-            <div className="uppercase text-[#737373] text-[16px]">
-              Stack
-            </div>
+            <div className="uppercase text-[#737373] text-[16px]">Stack</div>
             <div className="flex flex-col items-center mt-[30px]">
               <div className="flex gap-[10px]">
                 <img src={BNB} className="w-[100px] h-[100px]" />
@@ -80,7 +125,7 @@ const ConnectWallet = () => {
                 Total $ of Donated BNB & USDC
               </div>
               <div className="font-[300] text-[36px] text-black">
-                $0.00
+                {fairLaunchInfo.bnbDonated} BNB
               </div>
             </div>
             <div className="w-full flex justify-between mt-[30px] gap-[20px] px-[30px]">
@@ -90,11 +135,9 @@ const ConnectWallet = () => {
                   Estimated Stake
                 </div>
                 <div className="font-[300] text-[36px] text-black">
-                  0
+                  {fairLaunchInfo.estimatedPercentage}
                 </div>
-                <div className="uppercase text-[#737373] text-[16px]">
-                  %
-                </div>
+                <div className="uppercase text-[#737373] text-[16px]">%</div>
               </div>
               <div className="flex flex-col items-center">
                 <img src={S_LOGO} className="w-[100px] h-[100px] opacity-30" />
@@ -102,7 +145,7 @@ const ConnectWallet = () => {
                   Claimed
                 </div>
                 <div className="font-[300] text-[36px] text-black">
-                  0
+                  {fairLaunchInfo.claimedTokens}
                 </div>
                 <div className="uppercase text-[#737373] text-[16px]">
                   Stack
@@ -121,23 +164,19 @@ const ConnectWallet = () => {
                 # of Participants
               </div>
               <div className="font-[300] text-[36px] text-black">
-                0
+                {fairLaunchInfo.participants}
               </div>
             </div>
             <div className="flex flex-col items-center">
-              <div className="text-[16px] text-[#737373]">
-                Total Liquidity
-              </div>
+              <div className="text-[16px] text-[#737373]">Total Liquidity</div>
               <div className="font-[300] text-[36px] text-black">
-                $0.00
+                {fairLaunchInfo.totalBNBDonated} BNB
               </div>
             </div>
             <div className="flex flex-col items-center">
-              <div className="text-[16px] text-[#737373]">
-                Transactions
-              </div>
+              <div className="text-[16px] text-[#737373]">Transactions</div>
               <div className="font-[300] text-[36px] text-black">
-                0
+                {fairLaunchInfo.transactions}
               </div>
             </div>
           </div>

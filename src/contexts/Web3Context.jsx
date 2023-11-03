@@ -9,6 +9,7 @@ import USDCABI from "../assets/abis/USDC.json";
 
 export const Web3Context = createContext({
   chain: null,
+  address: null,
   isConnected: false,
   EarlyAdapterContract: null,
   LiquidityDriveContract: null,
@@ -23,7 +24,7 @@ export const Web3Provider = ({ children }) => {
   const { chain } = useNetwork();
   const { data: signer } = useSigner();
   const { address, isConnected } = useAccount();
-  const { data: balanceData } = useBalance({ address });
+  const { data: balanceData } = useBalance({ address, watch: true });
   const [USDCBalance, setUSDCBalance] = useState();
   const [BNBBalance, setBNBBalance] = useState();
 
@@ -75,6 +76,7 @@ export const Web3Provider = ({ children }) => {
     <Web3Context.Provider
       value={{
         chain,
+        address,
         isConnected,
         EarlyAdapterContract,
         LiquidityDriveContract,

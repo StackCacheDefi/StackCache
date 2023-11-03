@@ -135,7 +135,7 @@ export default function DepositCard(props) {
                 : processDeposit === ""
                 ? props.token === "BNB"
                   ? "Donate"
-                  : "Approve/Deposit"
+                  : "Approve/Donate"
                 : processDeposit
               : "Connect Wallet"}
           </div>
