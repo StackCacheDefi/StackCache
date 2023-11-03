@@ -39,9 +39,10 @@ export default function DepositCard(props) {
     if (props.token === "BNB") {
       setProcessDeposit("Donating...");
 
-      const tx = await LiquidityDriveContract.donate(0, {value: weiAmount});
+      const tx = await LiquidityDriveContract.donate(0, { value: weiAmount });
       tx.wait().then(async () => {
         toast.success("Donated successfully!");
+        await props.updateInfo();
         await getBNBBalance();
         setProcessDeposit("");
       });
@@ -58,6 +59,7 @@ export default function DepositCard(props) {
           const tx = await LiquidityDriveContract.donate(weiAmount);
           tx.wait().then(async () => {
             toast.success("Donated successfully!");
+            await props.updateInfo();
             await getUSDCBalance();
             setProcessDeposit("");
           });

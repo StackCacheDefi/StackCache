@@ -37,7 +37,7 @@ const ConnectWallet = () => {
   const { address, LiquidityDriveContract } = useWeb3();
   const [fairLaunchInfo, setFairLaunchInfo] = useState(defaultFairLaunchInfo);
 
-  const setInfo = async () => {
+  const updateInfo = async () => {
     const bnbDonated = await LiquidityDriveContract._bnbDonated(
       ethers.utils.getAddress(address)
     );
@@ -61,16 +61,18 @@ const ConnectWallet = () => {
       estimatedPercentage,
       claimedTokens:
         claimedTokens > 0 ? ethers.utils.formatEther(claimedTokens) : 0,
-      bnbDonated: ethers.utils.formatEther(bnbDonated),
+      bnbDonated: Number(ethers.utils.formatEther(bnbDonated)).toFixed(4),
       participants: ethers.utils.formatUnits(participants, "wei"),
-      totalBNBDonated: ethers.utils.formatEther(totalBNBDonated),
+      totalBNBDonated: Number(
+        ethers.utils.formatEther(totalBNBDonated)
+      ).toFixed(4),
       transactions: ethers.utils.formatUnits(transactions, "wei"),
     });
   };
 
   useEffect(() => {
     if (address && LiquidityDriveContract) {
-      setInfo();
+      updateInfo();
     }
   }, [address, LiquidityDriveContract]);
 
@@ -90,10 +92,22 @@ const ConnectWallet = () => {
         <div className="flex flex-col tablet:flex-row w-full tablet:w-[1000px] tablet:gap-[200px] mt-[50px] tablet:mt-[80px] z-[1] px-[12px] tablet:px-0">
           <div className="flex-1 flex flex-col gap-[50px] tablet:gap-[100px]">
             <GradientBox>
-              <DepositCard title="BNB" img={BNB} minValue={0.005} token="BNB" />
+              <DepositCard
+                title="BNB"
+                img={BNB}
+                minValue={0.005}
+                token="BNB"
+                updateInfo={updateInfo}
+              />
             </GradientBox>
             <GradientBox>
-              <DepositCard title="USDC" img={USDC} minValue={1} token="USDC" />
+              <DepositCard
+                title="USDC"
+                img={USDC}
+                minValue={1}
+                token="USDC"
+                updateInfo={updateInfo}
+              />
             </GradientBox>
             <GradientBox>
               <div className="font-[300] text-[30px] leading-[120px] text-white">
