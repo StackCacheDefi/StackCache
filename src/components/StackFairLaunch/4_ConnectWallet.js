@@ -84,11 +84,6 @@ const ConnectWallet = () => {
           alt="logo background"
           className="absolute left-0 top-[80px] tablet:max-h-[650px] opacity-50"
         />
-        <ConnectWalletButton>
-          <button className="w-[240px] h-[48px] text-white flex items-center justify-center font-[700] text-[16px]">
-            Connect Wallet
-          </button>
-        </ConnectWalletButton>
         <div className="flex flex-col tablet:flex-row w-full tablet:w-[1000px] tablet:gap-[200px] mt-[50px] tablet:mt-[80px] z-[1] px-[12px] tablet:px-0">
           <div className="flex-1 flex flex-col gap-[50px] tablet:gap-[100px]">
             <GradientBox>
@@ -205,7 +200,14 @@ const ConnectWallet = () => {
             </Link>
           </div>
           <div className="text-[16px] text-[#737373]">
-            Stack Fair Launch Contract:
+            Stack Fair Launch Contract:{" "}
+            <Link
+              className="text-[16px] font-[400] text-[#737373]"
+              to="https://bscscan.com/address/0xb2bd13bc60749b8d8bf5a9413e97e04f4e2f0721"
+              target="_blank"
+            >
+              0xB2bd13Bc60749b8d8Bf5a9413e97E04F4e2f0721
+            </Link>
           </div>
         </div>
       </div>

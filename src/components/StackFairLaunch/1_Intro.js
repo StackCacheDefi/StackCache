@@ -31,12 +31,11 @@ export default function Intro() {
           split a share of Stack tokens based on how much each user donates.
           <ul className="list-disc pl-[30px]">
             <li>
-              Fair Launch - All participants must purchase stack tokens with no pre-sale.
+              Fair Launch - All participants must purchase stack tokens with no pre-sale
             </li>
             <li className="ml-[30px]">
               NO STACK TOKENS HAVE NOR WILL BE PRE-ALLOCATED OR DISCOUNTED TO ANY BOARD MEMBERS, TEAM MEMBERS,
-              DEVELOPERS,
-              ETC.
+              DEVELOPERS, ETC.
             </li>
             <li>
               There is a 0% fee for NTT holders and a 5% fee for Non-NTT Holders
