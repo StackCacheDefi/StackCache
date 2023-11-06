@@ -38,13 +38,15 @@ const ConnectWallet = () => {
   const [fairLaunchInfo, setFairLaunchInfo] = useState(defaultFairLaunchInfo);
 
   const updateInfo = async () => {
-    const bnbDonated = await LiquidityDriveContract._bnbDonated(
-      ethers.utils.getAddress(address)
-    );
+    const bnbDonated = address
+      ? await LiquidityDriveContract._bnbDonated(address)
+      : 0;
     const participants = await LiquidityDriveContract.participants();
     const totalBNBDonated = await LiquidityDriveContract.totalBNBDonated();
     const transactions = await LiquidityDriveContract.totalTxs();
-    const claimedTokens = await LiquidityDriveContract._claimed(address);
+    const claimedTokens = address
+      ? await LiquidityDriveContract._claimed(address)
+      : 0;
 
     const estimatedPercentage = Number(
       (ethers.utils.formatEther(bnbDonated) /
@@ -71,10 +73,8 @@ const ConnectWallet = () => {
   };
 
   useEffect(() => {
-    if (address && LiquidityDriveContract) {
-      updateInfo();
-    }
-  }, [address, LiquidityDriveContract]);
+    updateInfo();
+  }, [address]);
 
   return (
     <div className="w-full flex justify-center border-b border-[#A5A6A5] py-[50px]">

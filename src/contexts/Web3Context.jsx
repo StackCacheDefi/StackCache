@@ -1,6 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { useAccount, useSigner, useBalance, useNetwork } from "wagmi";
+import {
+  useAccount,
+  useSigner,
+  useBalance,
+  useNetwork,
+  useProvider,
+} from "wagmi";
 import { ethers, Contract } from "ethers";
 
 import EarlyAdapterABI from "../assets/abis/EarlyAdapter.json";
@@ -21,6 +27,7 @@ export const Web3Context = createContext({
 });
 
 export const Web3Provider = ({ children }) => {
+  const provider = useProvider();
   const { chain } = useNetwork();
   const { data: signer } = useSigner();
   const { address, isConnected } = useAccount();
@@ -29,27 +36,28 @@ export const Web3Provider = ({ children }) => {
   const [BNBBalance, setBNBBalance] = useState();
 
   const EarlyAdapterContract = useMemo(() => {
-    if (!signer) return;
     return new Contract(
       process.env.REACT_APP_DEPOSIT_CONTRACT,
       EarlyAdapterABI,
-      signer
+      signer || provider
     );
-  }, [signer]);
+  }, [provider, signer]);
 
   const LiquidityDriveContract = useMemo(() => {
-    if (!signer) return;
     return new Contract(
       process.env.REACT_APP_LIQUIDITY_DRIVE_CONTRACT,
       StackLiquidityDriveABI,
-      signer
+      signer || provider
     );
-  }, [signer]);
+  }, [provider, signer]);
 
   const USDCContract = useMemo(() => {
-    if (!signer) return;
-    return new Contract(process.env.REACT_APP_USDC, USDCABI, signer);
-  }, [signer]);
+    return new Contract(
+      process.env.REACT_APP_USDC,
+      USDCABI,
+      signer || provider
+    );
+  }, [provider, signer]);
 
   const getUSDCBalance = async () => {
     let balance = await USDCContract.balanceOf(address);
@@ -63,14 +71,11 @@ export const Web3Provider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (USDCContract) {
-      getUSDCBalance();
-    }
+    if (!address) return;
 
-    if (balanceData) {
-      getBNBBalance();
-    }
-  }, [balanceData, address, USDCContract]);
+    getUSDCBalance();
+    getBNBBalance();
+  }, [address]);
 
   return (
     <Web3Context.Provider
