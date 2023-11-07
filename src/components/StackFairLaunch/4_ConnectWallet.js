@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { ethers } from "ethers";
@@ -9,7 +10,8 @@ import S_LOGO from "../../imgs/img_s_logo.svg";
 import LOGO from "../../imgs/about-bg-logo.svg";
 import STAKE from "../../imgs/img_stake.png";
 import { useWeb3 } from "../../contexts/Web3Context";
-import { useEffect, useState } from "react";
+import { getBNBPrice } from "../../helpers/coingecko-api";
+import { decimalFloat } from "../../helpers/utils";
 
 const ConnectWalletButton = styled.button`
   background: linear-gradient(180deg, #404040 0%, #a5a6a5 100.12%);
@@ -36,6 +38,7 @@ const defaultFairLaunchInfo = {
 const ConnectWallet = () => {
   const { address, LiquidityDriveContract } = useWeb3();
   const [fairLaunchInfo, setFairLaunchInfo] = useState(defaultFairLaunchInfo);
+  const [bnbPrice, setBNBPrice] = useState(0);
 
   const updateInfo = async () => {
     const bnbDonated = address
@@ -72,9 +75,24 @@ const ConnectWallet = () => {
     });
   };
 
+  const updateBNBPrice = async () => {
+    const price = await getBNBPrice();
+    setBNBPrice(price);
+  };
+
   useEffect(() => {
     updateInfo();
   }, [address]);
+
+  useEffect(() => {
+    updateBNBPrice();
+
+    const intervalId = setInterval(() => {
+      updateBNBPrice();
+    }, 60000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <div className="w-full flex justify-center border-b border-[#A5A6A5] py-[50px]">
@@ -134,7 +152,8 @@ const ConnectWallet = () => {
                 Total $ of Donated BNB & USDC
               </div>
               <div className="font-[300] text-[36px] text-black">
-                {fairLaunchInfo.bnbDonated} BNB
+                {fairLaunchInfo.bnbDonated} BNB ($
+                {decimalFloat(bnbPrice * +fairLaunchInfo.bnbDonated, 2)})
               </div>
             </div>
             <div className="w-full flex justify-between mt-[30px] gap-[20px] px-[30px]">
@@ -179,7 +198,8 @@ const ConnectWallet = () => {
             <div className="flex flex-col items-center">
               <div className="text-[16px] text-[#737373]">Total Liquidity</div>
               <div className="font-[300] text-[36px] text-black">
-                {fairLaunchInfo.totalBNBDonated} BNB
+                {fairLaunchInfo.totalBNBDonated} BNB ($
+                {decimalFloat(bnbPrice * +fairLaunchInfo.totalBNBDonated, 2)})
               </div>
             </div>
             <div className="flex flex-col items-center">
