@@ -55,8 +55,8 @@ const Days = () => {
           <div className="font-mono text-white font-[400] text-[60px] tablet:text-[80px] leading-[60px] tablet:leading-[90px] px-[10px]">
             {formatDuration()}
           </div>
-          <div className="font-[400] text-white text-[18px] leading-[24px] mt-[10px]">
-            We are going big. Get Stack tokens at the lowest cost.
+          <div className="font-[400] text-white text-[18px] leading-[24px] mt-[10px] px-[10px]">
+            Thanks for participating in the Stack Liquidity Drive. Claim your Stack when the timer ends.
           </div>
         </Bg>
       }
