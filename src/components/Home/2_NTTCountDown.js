@@ -143,13 +143,13 @@ export default function NTTCountDown() {
             {formatDuration()}
           </div>
           <div className="font-grotest font-[400] text-[36px] leading-[36px] text-[#ffeb3c]">
-            The Stack Fair Launch is open NOW!
+            The Stack Launch is Complete
           </div>
           <div className="flex w-full flex-col tablet:flex-row px-[12px] tablet:max-w-[1000px] justify-between mb-[-30px] gap-[20px]">
             <div className="w-full tablet:w-[50%] flex flex-col gap-[10px]">
               <Link to="/stack_fair_launch">
                 <GrayButton>
-                  Enter The Stack Liquidity Event & Get Stack Tokens
+                  Claim your Stack Tokens
                 </GrayButton>
               </Link>
               <div className="text-[14px] font-[300] text-white">

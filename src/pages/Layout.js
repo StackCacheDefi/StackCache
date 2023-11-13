@@ -229,7 +229,7 @@ const Layout = () => {
           </div>
           <div className="hidden pr-[50px] laptop:flex gap-[20px]">
             <Link to="/stack_fair_launch">
-              <LaunchRedButton>STACK LAUNCH - BUY NOW</LaunchRedButton>
+              <LaunchRedButton>Stack Launch - Claim Now</LaunchRedButton>
             </Link>
             <Link to="/early_adopters">
               <EarlyYellowButton>Early Adopter Pre-Sale</EarlyYellowButton>
