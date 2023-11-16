@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { ethers } from "ethers";
+import { useWeb3Modal } from "@web3modal/react";
+import { toast } from "react-toastify";
 
 import DepositCard from "./DepositCard";
 import BNB from "../../imgs/img_bnb.png";
@@ -23,7 +25,16 @@ const GradientBox = styled.button`
   border-radius: 12px;
 `;
 
-const TOTAL_TOKENS_FOR_FAIR_LAUNCH = 12500000;
+const Button = styled.button`
+  border-radius: 12px;
+  background: linear-gradient(180deg, #f5515f 0%, #a5a6a5 100.12%),
+    linear-gradient(91.72deg, #ff0000 -8.25%, rgba(47, 1, 1, 0.93) 92.02%);
+  color: white;
+
+  &:disabled {
+    background: #555;
+  }
+`;
 
 const defaultFairLaunchInfo = {
   estimatedTokens: 0,
@@ -36,41 +47,56 @@ const defaultFairLaunchInfo = {
 };
 
 const ConnectWallet = () => {
-  const { address, LiquidityDriveContract } = useWeb3();
+  const { open } = useWeb3Modal();
+  const { address, LiquidityDriveContract, isConnected, chain } = useWeb3();
   const [fairLaunchInfo, setFairLaunchInfo] = useState(defaultFairLaunchInfo);
   const [bnbPrice, setBNBPrice] = useState(0);
+  const [processDeposit, setProcessDeposit] = useState("");
 
   const updateInfo = async () => {
     const bnbDonated = address
-      ? await LiquidityDriveContract._bnbDonated(address)
+      ? Number(
+          ethers.utils.formatEther(
+            await LiquidityDriveContract._bnbDonated(address)
+          )
+        )
       : 0;
     const participants = await LiquidityDriveContract.participants();
-    const totalBNBDonated = await LiquidityDriveContract.totalBNBDonated();
+    const totalBNBDonated = Number(
+      ethers.utils.formatEther(await LiquidityDriveContract.totalBNBDonated())
+    );
     const transactions = await LiquidityDriveContract.totalTxs();
     const claimedTokens = address
-      ? await LiquidityDriveContract._claimed(address)
+      ? Number(
+          ethers.utils.formatUnits(
+            await LiquidityDriveContract._claimed(address),
+            9
+          )
+        )
       : 0;
 
-    const estimatedPercentage = Number(
-      (ethers.utils.formatEther(bnbDonated) /
-        ethers.utils.formatEther(totalBNBDonated)) *
-        100
-    ).toFixed(2);
+    const estimatedPercentage = decimalFloat(
+      (bnbDonated / totalBNBDonated) * 100,
+      2
+    );
 
-    const estimatedTokens =
-      (TOTAL_TOKENS_FOR_FAIR_LAUNCH * estimatedPercentage) / 100;
+    const estimatedTokens = address
+      ? Number(
+          ethers.utils.formatUnits(
+            await LiquidityDriveContract.availableOf(address),
+            9
+          )
+        )
+      : 0;
 
     setFairLaunchInfo({
       ...fairLaunchInfo,
-      estimatedTokens,
+      estimatedTokens: decimalFloat(estimatedTokens, 4),
       estimatedPercentage,
-      claimedTokens:
-        claimedTokens > 0 ? ethers.utils.formatEther(claimedTokens) : 0,
-      bnbDonated: Number(ethers.utils.formatEther(bnbDonated)).toFixed(4),
+      claimedTokens: decimalFloat(claimedTokens, 4),
+      bnbDonated: decimalFloat(bnbDonated, 4),
       participants: ethers.utils.formatUnits(participants, "wei"),
-      totalBNBDonated: Number(
-        ethers.utils.formatEther(totalBNBDonated)
-      ).toFixed(4),
+      totalBNBDonated: decimalFloat(totalBNBDonated, 4),
       transactions: ethers.utils.formatUnits(transactions, "wei"),
     });
   };
@@ -79,6 +105,22 @@ const ConnectWallet = () => {
     const price = await getBNBPrice();
     setBNBPrice(price);
   };
+
+  async function handleClaimStack() {
+    setProcessDeposit("Claiming...");
+
+    const tx = await LiquidityDriveContract.claimTokens();
+    tx.wait()
+      .then(async () => {
+        toast.success("Claimed successfully!");
+        await updateInfo();
+        setProcessDeposit("");
+      })
+      .catch((err) => {
+        console.log(err);
+        setProcessDeposit("");
+      });
+  }
 
   useEffect(() => {
     updateInfo();
@@ -122,11 +164,25 @@ const ConnectWallet = () => {
                 updateInfo={updateInfo}
               />
             </GradientBox>
-            <GradientBox>
-              <div className="font-[300] text-[30px] leading-[120px] text-white">
-                Claim Stack
+            <Button
+              onClick={isConnected ? () => handleClaimStack() : open}
+              disabled={
+                isConnected &&
+                (chain.id !== +process.env.REACT_APP_CHAIN_ID ||
+                  fairLaunchInfo.claimedTokens > 0 ||
+                  processDeposit !== "")
+              }
+            >
+              <div className="font-[300] text-[30px] leading-[120px]">
+                {isConnected
+                  ? chain.id !== +process.env.REACT_APP_CHAIN_ID
+                    ? "Wrong Network"
+                    : processDeposit === ""
+                    ? "Claim Stack"
+                    : processDeposit
+                  : "Connect Wallet"}
               </div>
-            </GradientBox>
+            </Button>
           </div>
           <div className="flex-1 flex flex-col items-center mt-[50px] tablet:mt-0">
             <div className="font-[300] text-[36px] text-[#737373]">

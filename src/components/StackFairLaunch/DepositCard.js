@@ -72,10 +72,6 @@ export default function DepositCard(props) {
   }
 
   const handleDeposit = () => {
-    if (chain.id !== +process.env.REACT_APP_CHAIN_ID) {
-      return;
-    }
-
     if (depositAmount !== "" && depositAmount !== 0) {
       const weiAmount = ethers.utils.parseEther(depositAmount.toString());
       handleDonate(weiAmount)
@@ -129,7 +125,8 @@ export default function DepositCard(props) {
           onClick={isConnected ? () => handleDeposit() : open}
           disabled={
             isConnected &&
-            (processDeposit !== "" ||
+            (chain.id !== +process.env.REACT_APP_CHAIN_ID ||
+              processDeposit !== "" ||
               depositAmount == null ||
               (depositAmount != null && depositAmount < props.minValue) ||
               Number(balance) < Number(depositAmount))
