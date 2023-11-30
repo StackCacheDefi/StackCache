@@ -19,11 +19,12 @@ import ContactUs from "./pages/Community/ContactUs";
 import StackNation from "./pages/Community/StackNation";
 import Resources from "./pages/Community/Resources";
 import TeamTreasuries from "./pages/Products/TeamTreasuries";
+import StackFairLaunch from "./pages/StackFairLaunch";
+import StackTokenPhase from "./pages/StackTokenPhase";
 
 import { Web3Provider } from "./contexts/Web3Context";
 
 import "./App.css";
-import StackFairLaunch from "./pages/StackFairLaunch";
 const ethereumClient = new EthereumClient(wagmiClient, chains);
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
                 <Route path="community/stack_nation" element={<StackNation />} />
                 <Route path="community/resources" element={<Resources />} />
                 <Route path="stack_fair_launch" element={<StackFairLaunch />} />
+                <Route path="stack_token" element={<StackTokenPhase />} />
                 <Route path="*" element={<NoPage />} />
               </Route>
             </Routes>
